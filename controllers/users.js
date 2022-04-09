@@ -9,8 +9,9 @@ module.exports.getUsers = (req, res) => {
 
 // получаем пользователя по id
 module.exports.getUser = (req, res) => {
-  User.findById(req.params.id)
-    .then(user => res.send({ data: user }))
+  User.findById(req.params.userId)
+    .then(user => {
+      res.send({ data: user })})
     .catch(err => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
 };
 
@@ -21,4 +22,24 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then(user => res.send({ data: user }))
     .catch(err => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+};
+
+// обновляем профиль
+module.exports.updateProfile = (req, res) => {
+  const { name, about } = req.body;
+  const _id = req.user._id;
+
+  User.findOneAndUpdate({ _id: _id }, { name: name, about: about })
+  .then(user => res.send({ data: user }))
+  .catch(err => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+}
+
+// обновляем аватар
+module.exports.updateAvatar = (req, res) => {
+  const { avatar } = req.body;
+  const _id = req.user._id;
+
+  User.findOneAndUpdate({ _id: _id }, { avatar: avatar })
+  .then(user => res.send({ data: user }))
+  .catch(err => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
 }
