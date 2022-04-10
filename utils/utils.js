@@ -26,7 +26,7 @@ const checkRes = res => {
 }
 
 const checkReqForUpdateProfile = req => {
-  if (!req.body.name || !req.body.about) {
+  if (req.body.name.length || !req.body.about) {
     throw new BadRequestError('Переданы некорректные данные');
   }
 }

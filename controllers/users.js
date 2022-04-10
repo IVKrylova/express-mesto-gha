@@ -31,7 +31,7 @@ module.exports.updateProfile = (req, res, next) => {
 
   checkReqForUpdateProfile(req);
 
-  User.findByIdAndUpdate(req.user._id, { name: name, about: about }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { name: name, about: about }, { new: true, runValidators: true })
     .then(res => checkRes(res))
     .then(user => res.send({ data: user }))
     .catch(err => next(err));
