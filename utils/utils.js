@@ -25,22 +25,9 @@ const checkRes = res => {
   return res
 }
 
-const checkReqForUpdateProfile = req => {
-  if (req.body.name.length || !req.body.about) {
-    throw new BadRequestError('Переданы некорректные данные');
-  }
-}
- const checkReqForUpdateAvatar = req => {
-  if (!req.body.avatar) {
-    throw new BadRequestError('Переданы некорректные данные');
-  }
- }
-
 module.exports = {
   INTERNAL_SERVER_ERROR_CODE,
   BAD_REQUEST_CODE,
   NOT_FOUND_CODE,
-  checkRes,
-  checkReqForUpdateProfile,
-  checkReqForUpdateAvatar
+  checkRes
 }

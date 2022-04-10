@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const { checkRes, checkReqForUpdateProfile, checkReqForUpdateAvatar } = require('../utils/utils');
+const { checkRes } = require('../utils/utils');
 
 // получаем всех пользователей
 module.exports.getUsers = (req, res, next) => {
@@ -29,8 +29,6 @@ module.exports.createUser = (req, res, next) => {
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
 
-  checkReqForUpdateProfile(req);
-
   User.findByIdAndUpdate(req.user._id, { name: name, about: about }, { new: true, runValidators: true })
     .then(res => checkRes(res))
     .then(user => res.send({ data: user }))
@@ -41,9 +39,7 @@ module.exports.updateProfile = (req, res, next) => {
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
-  checkReqForUpdateAvatar(req);
-
-  User.findByIdAndUpdate(req.user._id, { avatar: avatar }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { avatar: avatar }, { new: true, runValidators: true })
     .then(res => checkRes(res))
     .then(user => res.send({ data: user }))
     .catch(err => next(err));
