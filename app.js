@@ -5,7 +5,10 @@ const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
 const { PORT = 3000 } = process.env;
 const { INTERNAL_SERVER_ERROR_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE } = require('./utils/utils');
+
 const app = express();
+
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -31,13 +34,18 @@ app.use((err, req, res, next) => {
     return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные' });
   }
   if (err.name === 'CastError') {
-    return res.status(NOT_FOUND_CODE).send({ message: 'Объект с указанным _id не найден' });
+    return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные' });
   }
 
   console.log(`Произошла ошибка ${err.name}: ${err.message}`);
 
   next();
 });
+
+// Обработка неправильного пути
+app.use((req, res) => {
+  res.send({ message: 'Страница не найдена' });
+})
 
 async function main() {
   await mongoose.connect('mongodb://localhost:27017/mestodb');
