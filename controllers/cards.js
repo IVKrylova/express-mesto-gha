@@ -1,96 +1,49 @@
 const Card = require('../models/card');
-const {
-  INTERNAL_SERVER_ERROR_CODE,
-  BAD_REQUEST_CODE,
-  NOT_FOUND_CODE,
-  InternalServerError,
-  BadRequestError,
-  NotFoundError
-} = require('../utils/utils');
+const { checkRes } = require('../utils/utils');
 
 // получаем все карточки
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then(card => res.send({ data: card }))
-    .catch(err => {
-      if (err.name === 'InternalServerError') {
-        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
-      }
-      console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
-    });
+    .catch(err => next(err));
 };
 
 // создаем новую карточку
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
 
   Card.create({ name, link, owner })
     .then(card => res.send({ data: card }))
-    .catch(err => {
-      if (err.name === 'InternalServerError') {
-        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
-      }
-      if (err.name === 'BadRequestError') {
-        return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные при создании карточки' });
-      }
-      console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
-    });
+    .catch(err => next(err));
 };
 
 // удаляем карточку по id
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
+    .then(res => checkRes(res))
     .then(card => res.send({ data: card }))
-    .catch(err => {
-      if (err.name === 'InternalServerError') {
-        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
-      }
-      if (err.name === 'NotFoundError') {
-        return res.status(NOT_FOUND_CODE).send({ message: 'Карточка с указанным _id не найдена' });
-      }
-      console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
-    });
+    .catch(err => next(err));
 };
 
 // ставим лайк карточке
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-    { new: true },
-  ).then(card => res.send({ data: card }))
-    .catch(err => {
-      if (err.name === 'InternalServerError') {
-        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
-      }
-      if (err.name === 'BadRequestError') {
-        return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные для постановки лайка' });
-      }
-      if (err.name === 'NotFoundError') {
-        return res.status(NOT_FOUND_CODE).send({ message: 'Передан несуществующий _id карточки' });
-      }
-      console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
-    });
+      req.params.cardId,
+      { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+      { new: true })
+    .then(res => checkRes(res))
+    .then(card => res.send({ data: card }))
+    .catch(err => next(err));
 }
 
 // удаляем лайк карточки
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
-    { new: true },
-  ).then(card => res.send({ data: card }))
-    .catch(err => {
-      if (err.name === 'InternalServerError') {
-        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
-      }
-      if (err.name === 'BadRequestError') {
-        return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные для снятия лайка' });
-      }
-      if (err.name === 'NotFoundError') {
-        return res.status(NOT_FOUND_CODE).send({ message: 'Передан несуществующий _id карточки' });
-      }
-      console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
-    });
+      req.params.cardId,
+      { $pull: { likes: req.user._id } }, // убрать _id из массива
+      { new: true })
+    .then(res => checkRes(res))
+    .then(card => res.send({ data: card }))
+    .catch(err => next(err));
 }

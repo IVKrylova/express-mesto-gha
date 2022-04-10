@@ -1,96 +1,50 @@
 const User = require('../models/user');
-const {
-  INTERNAL_SERVER_ERROR_CODE,
-  BAD_REQUEST_CODE,
-  NOT_FOUND_CODE,
-  InternalServerError,
-  BadRequestError,
-  NotFoundError
-} = require('../utils/utils');
+const { checkRes, checkReqForUpdateProfile, checkReqForUpdateAvatar } = require('../utils/utils');
 
 // получаем всех пользователей
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then(user => res.send({ data: user }))
-    .catch(err => {
-      if (err.name === 'InternalServerError') {
-        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
-      }
-      console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
-    });
+    .catch(err => next(err));
 };
 
 // получаем пользователя по id
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
-    .then(user => {
-      res.send({ data: user })})
-    .catch(err => {
-      if (err.name === 'InternalServerError') {
-        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
-      }
-      if (err.name === 'NotFoundError') {
-        return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь по указанному _id не найден' });
-      }
-      console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
-    });
+    .then(res => checkRes(res))
+    .then(user => res.send({ data: user }))
+    .catch(err => next(err));
 };
 
 // создаем нового пользователя
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
     .then(user => res.send({ data: user }))
-    .catch(err => {
-      if (err.name === 'InternalServerError') {
-        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
-      }
-      if (err.name === 'BadRequestError') {
-        return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные при создании пользователя' });
-      }
-      console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
-    });
+    .catch(err => next(err));
 };
 
 // обновляем профиль
-module.exports.updateProfile = (req, res) => {
+module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  const _id = req.user._id;
 
-  User.findOneAndUpdate({ _id: _id }, { name: name, about: about })
+  checkReqForUpdateProfile(req);
+
+  User.findByIdAndUpdate(req.user._id, { name: name, about: about }, { new: true })
+    .then(res => checkRes(res))
     .then(user => res.send({ data: user }))
-    .catch(err => {
-      if (err.name === 'InternalServerError') {
-        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
-      }
-      if (err.name === 'BadRequestError') {
-        return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные при обновлении профиля' });
-      }
-      if (err.name === 'NotFoundError') {
-        return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь с указанным _id не найден' });
-      }
-      console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
-    });
+    .catch(err => next(err));
 }
 
 // обновляем аватар
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  const _id = req.user._id;
 
-  User.findOneAndUpdate({ _id: _id }, { avatar: avatar })
+  checkReqForUpdateAvatar(req);
+
+  User.findByIdAndUpdate(req.user._id, { avatar: avatar }, { new: true })
+    .then(res => checkRes(res))
     .then(user => res.send({ data: user }))
-    .catch(err => {
-      if (err.name === 'InternalServerError') {
-        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
-      }
-      if (err.name === 'BadRequestError') {
-        return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные при обновлении аватара' });
-      }
-      if (err.name === 'NotFoundError') {
-        return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь с указанным _id не найден' });
-      }
-      console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
-    });
+    .catch(err => next(err));
 }
