@@ -44,7 +44,7 @@ app.use((err, req, res, next) => {
 
 // Обработка неправильного пути
 app.use((req, res) => {
-  res.send({ message: 'Страница не найдена' });
+  res.status(NOT_FOUND_CODE).send({ message: 'Страница не найдена' });
 })
 
 async function main() {
