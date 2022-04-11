@@ -31,7 +31,7 @@ app.use((req, res) => {
 
 // обработка ошибок
 // eslint-disable-next-line consistent-return
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   if (err.name === 'ValidationError') {
     return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные' });
   }
@@ -41,8 +41,14 @@ app.use((err, req, res) => {
   if (err.statusCode === NOT_FOUND_CODE) {
     return res.status(NOT_FOUND_CODE).send({ message: err.message });
   }
+  if (err.name === 'InternalError') {
+    return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
+  }
 
-  return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
+  // eslint-disable-next-line no-console
+  console.log(`Произошла ошибка ${err.name}: ${err.message}`);
+
+  next();
 });
 
 async function main() {
