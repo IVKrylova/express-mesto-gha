@@ -24,28 +24,25 @@ app.use((req, res, next) => {
 app.use(usersRoutes);
 app.use(cardsRoutes);
 
+// Обработка неправильного пути
+app.use((req, res) => {
+  res.status(NOT_FOUND_CODE).send({ message: 'Страница не найдена' });
+});
+
 // обработка ошибок
 // eslint-disable-next-line consistent-return
-app.use((err, req, res, next) => {
-  if (err.name === 'InternalError') {
-    return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
-  }
+app.use((err, req, res) => {
   if (err.name === 'ValidationError') {
     return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные' });
   }
   if (err.name === 'CastError') {
     return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные' });
   }
+  if (err.statusCode === NOT_FOUND_CODE) {
+    return res.status(NOT_FOUND_CODE).send({ message: err.message });
+  }
 
-  // eslint-disable-next-line no-console
-  console.log(`Произошла ошибка ${err.name}: ${err.message}`);
-
-  next();
-});
-
-// Обработка неправильного пути
-app.use((req, res) => {
-  res.status(NOT_FOUND_CODE).send({ message: 'Страница не найдена' });
+  return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: `Внутренняя ошибка сервера: ${err.message}` });
 });
 
 async function main() {
