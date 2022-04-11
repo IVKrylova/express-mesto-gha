@@ -8,7 +8,7 @@
     "nodemon": "^2.0.15"
   },
   "scripts": {
-    "lint": "npx eslint",
+    "lint": "npx eslint .",
     "start": "nodemon app.js",
     "dev": "nodemon app.js"
   },
