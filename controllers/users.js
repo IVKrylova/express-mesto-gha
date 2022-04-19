@@ -28,7 +28,7 @@ module.exports.createUser = (req, res, next) => {
   } = req.body;
 
   if (!validator.isEmail(email)) {
-    return Promise.reject(new Error('Неправильные почта или пароль'));
+    return res.status(401).send({ message: 'Неправильные почта или пароль' });
   }
 
   bcrypt.hash(password, 10)

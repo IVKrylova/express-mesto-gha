@@ -4,6 +4,10 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
+const {
+  login,
+  createUser,
+} = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
 const { INTERNAL_SERVER_ERROR_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE } = require('./utils/utils');
@@ -12,6 +16,11 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// регистрация пользователя
+app.post('/signin', login);
+// авторизация пользователя
+app.post('/signup', createUser);
 
 // авторизация пользователя
 app.use((req, res, next) => {
