@@ -1,5 +1,7 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { checkRes } = require('../utils/utils');
 
@@ -26,7 +28,7 @@ module.exports.createUser = (req, res, next) => {
   } = req.body;
 
   if (!validator.isEmail(email)) {
-    return res.status(401).send({ message: 'Передан неверный логин или пароль.' });
+    return Promise.reject(new Error('Неправильные почта или пароль'));
   }
 
   bcrypt.hash(password, 10)
@@ -58,5 +60,26 @@ module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((data) => checkRes(data))
     .then((user) => res.send({ data: user }))
+    .catch((err) => next(err));
+};
+
+// вход в приложение
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
+      );
+
+      res.cookie('jwt', token, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+      })
+        .end();
+    })
     .catch((err) => next(err));
 };
