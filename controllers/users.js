@@ -1,3 +1,5 @@
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const { checkRes } = require('../utils/utils');
 
@@ -17,10 +19,20 @@ module.exports.getUser = (req, res, next) => {
 };
 
 // создаем нового пользователя
+// eslint-disable-next-line consistent-return
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar } = req.body;
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
 
-  User.create({ name, about, avatar })
+  if (!validator.isEmail(email)) {
+    return res.status(401).send({ message: 'Передан неверный логин или пароль.' });
+  }
+
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      email, password: hash, name, about, avatar,
+    }))
     .then((user) => res.send({ data: user }))
     .catch((err) => next(err));
 };
