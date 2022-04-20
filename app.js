@@ -23,15 +23,6 @@ app.post('/signin', login);
 // роут для авторизации пользователя
 app.post('/signup', createUser);
 
-// авторизация пользователя
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6251a49680b1ddcf6859a5e2',
-  };
-
-  next();
-});
-
 // авторизация
 app.use(auth);
 
