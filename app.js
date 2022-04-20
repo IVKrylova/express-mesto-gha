@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
 const {
@@ -33,6 +34,9 @@ app.use(auth);
 
 app.use(usersRoutes);
 app.use(cardsRoutes);
+
+// обработчик ошибок celebrate
+app.use(errors());
 
 // oбработка неправильного пути
 app.use((req, res) => {
