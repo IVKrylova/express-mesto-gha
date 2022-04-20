@@ -3,13 +3,13 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { checkRes } = require('../utils/utils');
+const { checkRes, checkAuth } = require('../utils/utils');
 
 // получаем всех пользователей
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((user) => res.send({ data: user }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 // получаем пользователя по id
@@ -17,26 +17,23 @@ module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((data) => checkRes(data))
     .then((user) => res.send({ data: user }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 // создаем нового пользователя
-// eslint-disable-next-line consistent-return
 module.exports.createUser = (req, res, next) => {
   const {
     email, password, name, about, avatar,
   } = req.body;
 
-  if (!validator.isEmail(email)) {
-    return res.status(401).send({ message: 'Неправильные почта или пароль' });
-  }
+  checkAuth(validator.isEmail(email));
 
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
       email, password: hash, name, about, avatar,
     }))
     .then((user) => res.send({ data: user }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 // обновляем профиль
@@ -50,7 +47,7 @@ module.exports.updateProfile = (req, res, next) => {
   )
     .then((data) => checkRes(data))
     .then((user) => res.send({ data: user }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 // обновляем аватар
@@ -60,7 +57,7 @@ module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((data) => checkRes(data))
     .then((user) => res.send({ data: user }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 // вход в приложение
@@ -68,6 +65,7 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
+    .then((user) => checkAuth(user))
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
@@ -81,7 +79,7 @@ module.exports.login = (req, res, next) => {
       })
         .end();
     })
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 // получаем текущего пользователя
@@ -91,5 +89,5 @@ module.exports.getCurrentUser = (req, res, next) => {
   User.findById(_id).select('+password')
     .then((data) => checkRes(data))
     .then((user) => res.send({ data: user }))
-    .catch((err) => next(err));
+    .catch(next);
 };
