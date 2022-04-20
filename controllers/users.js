@@ -88,7 +88,7 @@ module.exports.login = (req, res, next) => {
 module.exports.getCurrentUser = (req, res, next) => {
   const { _id } = req.user._id;
 
-  User.findById(_id)
+  User.findById(_id).select('+password')
     .then((data) => checkRes(data))
     .then((user) => res.send({ data: user }))
     .catch((err) => next(err));
