@@ -83,3 +83,13 @@ module.exports.login = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
+
+// получаем текущего пользователя
+module.exports.getCurrentUser = (req, res, next) => {
+  const { _id } = req.user._id;
+
+  User.findById(_id)
+    .then((data) => checkRes(data))
+    .then((user) => res.send({ data: user }))
+    .catch((err) => next(err));
+};

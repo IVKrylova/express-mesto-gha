@@ -8,6 +8,7 @@ const {
   login,
   createUser,
 } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 const { INTERNAL_SERVER_ERROR_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE } = require('./utils/utils');
@@ -17,9 +18,9 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// регистрация пользователя
+// роут для регистрации пользователя
 app.post('/signin', login);
-// авторизация пользователя
+// роут для авторизации пользователя
 app.post('/signup', createUser);
 
 // авторизация пользователя
@@ -30,6 +31,9 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// авторизация
+app.use(auth);
 
 app.use(usersRoutes);
 app.use(cardsRoutes);
