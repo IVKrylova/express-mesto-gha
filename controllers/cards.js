@@ -22,7 +22,14 @@ module.exports.createCard = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((data) => checkRes(data))
-    .then((card) => res.send({ data: card }))
+    // eslint-disable-next-line consistent-return
+    .then((card) => {
+      if (req.user._id !== card.owner) {
+        return res.status(403).send({ message: 'Попытка удалить чужую карточку' });
+      }
+
+      res.send({ data: card });
+    })
     .catch((err) => next(err));
 };
 
