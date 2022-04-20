@@ -8,7 +8,6 @@ module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    /* throw new UnauthorizedError('Необходима авторизация'); */
     return res.status(UNAUTHORIZED_CODE).send({ message: 'Необходима авторизация' });
   }
 
