@@ -17,6 +17,7 @@ const {
   NOT_FOUND_CODE,
   INTERNAL_SERVER_ERROR_CODE,
   CONFLICT_CODE,
+  UNAUTHORIZED_CODE,
 } = require('./utils/utils');
 
 const app = express();
@@ -25,7 +26,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // роут для регистрации пользователя
-app.post('/signin', login);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
 // роут для авторизации пользователя
 app.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -63,8 +69,11 @@ app.use((err, req, res, next) => {
   if (err.code === 11000) {
     return res.status(CONFLICT_CODE).send({ message: 'При регистрации указан email, который уже существует на сервере' });
   }
-  res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Внутренняя ошибка сервера' });
+  if (err.name === 'UnauthorizedError') {
+    return res.status(UNAUTHORIZED_CODE).send({ message: err.message });
+  }
 
+  res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Внутренняя ошибка сервера' });
   next();
 });
 
