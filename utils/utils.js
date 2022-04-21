@@ -24,10 +24,11 @@ const checkAuth = (res) => {
 };
 
 // проверка прав доступа
-const checkOwnerCard = (req, data) => {
-  if (req.user._id !== data.owner.toString()) {
+const checkOwnerCard = (req, card) => {
+  if (req.user._id !== card.owner) {
     throw new ForbiddenError('Попытка удалить чужую карточку');
   }
+  return card;
 };
 
 module.exports = {

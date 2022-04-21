@@ -19,6 +19,7 @@ const {
   INTERNAL_SERVER_ERROR_CODE,
   CONFLICT_CODE,
   UNAUTHORIZED_CODE,
+  FORBIDDEN_CODE,
 } = require('./utils/utils');
 
 const app = express();
@@ -74,6 +75,9 @@ app.use((err, req, res, next) => {
   }
   if (err.name === 'UnauthorizedError') {
     return res.status(UNAUTHORIZED_CODE).send({ message: err.message });
+  }
+  if (err.name === 'ForbiddenError') {
+    return res.status(FORBIDDEN_CODE).send({ message: err.message });
   }
   res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Внутренняя ошибка сервера' });
   next();
