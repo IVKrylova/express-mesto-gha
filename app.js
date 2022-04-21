@@ -66,7 +66,7 @@ app.use((err, req, res, next) => {
   if (err.name === 'ValidationError' || err.name === 'CastError') {
     return res.status(BAD_REQUEST_CODE).send({ message: 'Переданы некорректные данные' });
   }
-  if (err.statusCode === NOT_FOUND_CODE) {
+  if (err.statusCode === NOT_FOUND_CODE || err.name === 'NotFoundError') {
     return res.status(NOT_FOUND_CODE).send({ message: err.message });
   }
   if (err.code === 11000) {
@@ -75,7 +75,6 @@ app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     return res.status(UNAUTHORIZED_CODE).send({ message: err.message });
   }
-
   res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Внутренняя ошибка сервера' });
   next();
 });
