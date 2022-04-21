@@ -25,7 +25,7 @@ const checkAuth = (res) => {
 
 // проверка прав доступа
 const checkOwnerCard = (req, data) => {
-  if (req.user._id !== data.owner) {
+  if (req.user._id !== data.owner.toString()) {
     throw new ForbiddenError('Попытка удалить чужую карточку');
   }
 };
