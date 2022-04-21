@@ -75,7 +75,7 @@ app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     return res.status(UNAUTHORIZED_CODE).send({ message: err.message });
   }
-  res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: err.message /* 'Внутренняя ошибка сервера' */ });
+  res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Внутренняя ошибка сервера' });
   next();
 });
 
