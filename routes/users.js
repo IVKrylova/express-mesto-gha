@@ -8,8 +8,10 @@ const {
   getCurrentUser,
 } = require('../controllers/users');
 
+router.get('/users/me', getCurrentUser);
 router.get('/users', getUsers);
 router.get('/users/:userId', getUser);
+
 router.patch('/users/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -21,6 +23,5 @@ router.patch('/users/me/avatar', celebrate({
     avatar: Joi.string().uri(),
   }),
 }), updateAvatar);
-router.get('/users/me', getCurrentUser);
 
 module.exports = router;
