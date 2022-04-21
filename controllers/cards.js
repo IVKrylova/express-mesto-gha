@@ -1,5 +1,6 @@
 const Card = require('../models/card');
-const { checkRes, checkOwnerCard } = require('../utils/utils');
+const { checkRes } = require('../utils/utils');
+const { ForbiddenError } = require('../utils/ForbiddenError');
 
 // получаем все карточки
 module.exports.getCards = (req, res, next) => {
@@ -22,7 +23,12 @@ module.exports.createCard = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((data) => checkRes(data))
-    .then((card) => checkOwnerCard(req, card))
+    .then((card) => {
+      if (req.user._id !== card.owner.toString()) {
+        throw new ForbiddenError('Попытка удалить чужую карточку');
+      }
+      return card;
+    })
     .then((card) => res.send({ data: card }))
     .catch(next);
 };

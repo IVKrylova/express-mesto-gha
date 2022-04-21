@@ -6,7 +6,6 @@ const CONFLICT_CODE = 409;
 const INTERNAL_SERVER_ERROR_CODE = 500;
 const { NotFoundError } = require('./NotFoundError');
 const { UnauthorizedError } = require('./UnauthorizedError');
-const { ForbiddenError } = require('./ForbiddenError');
 
 // проверка на поиск по некорректным данным
 const checkRes = (res) => {
@@ -23,14 +22,6 @@ const checkAuth = (res) => {
   }
 };
 
-// проверка прав доступа
-const checkOwnerCard = (req, card) => {
-  if (req.user._id !== card.owner) {
-    throw new ForbiddenError('Попытка удалить чужую карточку');
-  }
-  return card;
-};
-
 module.exports = {
   BAD_REQUEST_CODE,
   UNAUTHORIZED_CODE,
@@ -40,5 +31,4 @@ module.exports = {
   INTERNAL_SERVER_ERROR_CODE,
   checkRes,
   checkAuth,
-  checkOwnerCard,
 };
