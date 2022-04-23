@@ -29,10 +29,8 @@ module.exports.deleteCard = (req, res, next) => {
       }
       return card;
     })
-    .then((card) => {
-      Card.findByIdAndRemove(card._id.toString())
-        .then((data) => res.send({ data }));
-    })
+    .then((card) => Card.findByIdAndRemove(card._id.toString())
+      .then((data) => res.send({ data })))
     .catch(next);
 };
 
