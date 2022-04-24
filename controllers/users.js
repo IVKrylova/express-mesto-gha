@@ -6,6 +6,7 @@ const { checkRes } = require('../utils/utils');
 const { ConflictError } = require('../utils/ConflictError');
 const { BadRequestError } = require('../utils/BadRequestError');
 const { NotFoundError } = require('../utils/NotFoundError');
+const { NOT_FOUND_CODE } = require('../utils/utils');
 
 // получаем всех пользователей
 module.exports.getUsers = (req, res, next) => {
@@ -20,10 +21,10 @@ module.exports.getUser = (req, res, next) => {
     .then((data) => checkRes(data))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.statusCode === 404 || err.name === 'NotFoundError') {
-        next(new NotFoundError('Пользователь по указанному _id не найден'));
-      } else if (err.name === 'CastError') {
+      if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
+      } if (err.statusCode === NOT_FOUND_CODE || err.name === 'NotFoundError') {
+        next(new NotFoundError('Пользователь по указанному _id не найден'));
       } else {
         next(err);
       }
@@ -54,7 +55,7 @@ module.exports.createUser = (req, res, next) => {
       avatar: user.avatar,
     }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.statusCode === NOT_FOUND_CODE || err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
       } else {
         next(err);
@@ -76,7 +77,7 @@ module.exports.updateProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
-      } else if (err.statusCode === 404 || err.name === 'NotFoundError') {
+      } else if (err.statusCode === NOT_FOUND_CODE || err.name === 'NotFoundError') {
         next(new NotFoundError('Пользователь с указанным _id не найден'));
       } else {
         next(err);
@@ -94,7 +95,7 @@ module.exports.updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при обновлении аватара'));
-      } else if (err.statusCode === 404 || err.name === 'NotFoundError') {
+      } else if (err.statusCode === NOT_FOUND_CODE || err.name === 'NotFoundError') {
         next(new NotFoundError('Пользователь с указанным _id не найден'));
       } else {
         next(err);
@@ -133,7 +134,7 @@ module.exports.getCurrentUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
-      } else if (err.statusCode === 404 || err.name === 'NotFoundError') {
+      } else if (err.statusCode === NOT_FOUND_CODE || err.name === 'NotFoundError') {
         next(new NotFoundError('Пользователь с указанным _id не найден'));
       } else {
         next(err);
