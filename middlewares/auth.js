@@ -12,6 +12,5 @@ module.exports = (req, res, next) => {
   } catch (err) {
     throw new UnauthorizedError('Необходима авторизация');
   }
-
   next();
 };

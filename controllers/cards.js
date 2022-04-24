@@ -1,6 +1,9 @@
 const Card = require('../models/card');
 const { checkRes } = require('../utils/utils');
 const { ForbiddenError } = require('../utils/ForbiddenError');
+const { BadRequestError } = require('../utils/BadRequestError');
+const { NotFoundError } = require('../utils/NotFoundError');
+const { NOT_FOUND_CODE } = require('../utils/utils');
 
 // получаем все карточки
 module.exports.getCards = (req, res, next) => {
@@ -16,7 +19,13 @@ module.exports.createCard = (req, res, next) => {
 
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные при создании карточки'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 // удаляем карточку по id
@@ -31,7 +40,15 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .then((card) => Card.findByIdAndRemove(card._id.toString())
       .then((data) => res.send({ data })))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else if (err.statusCode === NOT_FOUND_CODE || err.name === 'NotFoundError') {
+        next(new NotFoundError('Карточка с указанным _id не найдена'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 // ставим лайк карточке
@@ -43,7 +60,15 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((data) => checkRes(data))
     .then((card) => res.send({ data: card }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные для постановки лайка'));
+      } else if (err.statusCode === NOT_FOUND_CODE || err.name === 'NotFoundError') {
+        next(new NotFoundError('Передан несуществующий _id карточки'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 // удаляем лайк карточки
@@ -55,5 +80,13 @@ module.exports.dislikeCard = (req, res, next) => {
   )
     .then((data) => checkRes(data))
     .then((card) => res.send({ data: card }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные для снятия лайка'));
+      } else if (err.statusCode === NOT_FOUND_CODE || err.name === 'NotFoundError') {
+        next(new NotFoundError('Передан несуществующий _id карточки'));
+      } else {
+        next(err);
+      }
+    });
 };
