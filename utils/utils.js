@@ -1,5 +1,4 @@
-/* const UNAUTHORIZED_CODE = 401; */
-const FORBIDDEN_CODE = 403;
+/* const FORBIDDEN_CODE = 403; */
 const CONFLICT_CODE = 409;
 const { NotFoundError } = require('./NotFoundError');
 
@@ -12,8 +11,7 @@ const checkRes = (res) => {
 };
 
 module.exports = {
-  /* UNAUTHORIZED_CODE, */
-  FORBIDDEN_CODE,
+  /* FORBIDDEN_CODE, */
   CONFLICT_CODE,
   checkRes,
 };
