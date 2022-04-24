@@ -3,7 +3,6 @@ const { checkRes } = require('../utils/utils');
 const { ForbiddenError } = require('../utils/ForbiddenError');
 const { BadRequestError } = require('../utils/BadRequestError');
 const { NotFoundError } = require('../utils/NotFoundError');
-const { NOT_FOUND_CODE } = require('../utils/utils');
 
 // получаем все карточки
 module.exports.getCards = (req, res, next) => {
@@ -43,7 +42,7 @@ module.exports.deleteCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
-      } else if (err.statusCode === NOT_FOUND_CODE || err.name === 'NotFoundError') {
+      } else if (err.statusCode === 404 || err.name === 'NotFoundError') {
         next(new NotFoundError('Карточка с указанным _id не найдена'));
       } else {
         next(err);
@@ -63,7 +62,7 @@ module.exports.likeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные для постановки лайка'));
-      } else if (err.statusCode === NOT_FOUND_CODE || err.name === 'NotFoundError') {
+      } else if (err.statusCode === 404 || err.name === 'NotFoundError') {
         next(new NotFoundError('Передан несуществующий _id карточки'));
       } else {
         next(err);
@@ -83,7 +82,7 @@ module.exports.dislikeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные для снятия лайка'));
-      } else if (err.statusCode === NOT_FOUND_CODE || err.name === 'NotFoundError') {
+      } else if (err.statusCode === 404 || err.name === 'NotFoundError') {
         next(new NotFoundError('Передан несуществующий _id карточки'));
       } else {
         next(err);

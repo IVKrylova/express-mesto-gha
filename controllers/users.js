@@ -20,7 +20,7 @@ module.exports.getUser = (req, res, next) => {
     .then((data) => checkRes(data))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'NotFoundError') {
+      if (err.statusCode === 404 || err.name === 'NotFoundError') {
         next(new NotFoundError('Пользователь по указанному _id не найден'));
       } else if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
@@ -76,7 +76,7 @@ module.exports.updateProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
-      } else if (err.name === 'NotFoundError') {
+      } else if (err.statusCode === 404 || err.name === 'NotFoundError') {
         next(new NotFoundError('Пользователь с указанным _id не найден'));
       } else {
         next(err);
@@ -94,7 +94,7 @@ module.exports.updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при обновлении аватара'));
-      } else if (err.name === 'NotFoundError') {
+      } else if (err.statusCode === 404 || err.name === 'NotFoundError') {
         next(new NotFoundError('Пользователь с указанным _id не найден'));
       } else {
         next(err);
@@ -133,7 +133,7 @@ module.exports.getCurrentUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
-      } else if (err.name === 'NotFoundError') {
+      } else if (err.statusCode === 404 || err.name === 'NotFoundError') {
         next(new NotFoundError('Пользователь с указанным _id не найден'));
       } else {
         next(err);
