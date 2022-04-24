@@ -1,4 +1,3 @@
-/* const CONFLICT_CODE = 409; */
 const { NotFoundError } = require('./NotFoundError');
 
 // проверка на поиск по некорректным данным
@@ -9,4 +8,4 @@ const checkRes = (res) => {
   return res;
 };
 
-module.exports = { /* CONFLICT_CODE, */ checkRes };
+module.exports = { checkRes };
