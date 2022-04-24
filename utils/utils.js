@@ -1,5 +1,4 @@
-/* const FORBIDDEN_CODE = 403; */
-const CONFLICT_CODE = 409;
+/* const CONFLICT_CODE = 409; */
 const { NotFoundError } = require('./NotFoundError');
 
 // проверка на поиск по некорректным данным
@@ -10,8 +9,4 @@ const checkRes = (res) => {
   return res;
 };
 
-module.exports = {
-  /* FORBIDDEN_CODE, */
-  CONFLICT_CODE,
-  checkRes,
-};
+module.exports = { /* CONFLICT_CODE, */ checkRes };
