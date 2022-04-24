@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors, celebrate, Joi } = require('celebrate');
+const helmet = require('helmet');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
@@ -14,6 +15,9 @@ const { NOT_FOUND_CODE } = require('./utils/utils');
 const { PORT = 3000 } = process.env;
 
 const app = express();
+
+// защита приложения от веб-уязвимостей путем соответствующей настройки заголовков HTTP
+app.use(helmet());
 
 app.use(cookieParser());
 
