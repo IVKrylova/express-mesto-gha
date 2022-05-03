@@ -3,16 +3,10 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-/* const { errors, celebrate, Joi } = require('celebrate'); */
 const { errors } = require('celebrate');
 const helmet = require('helmet');
 const routes = require('./routes/index');
-/* const usersRoutes = require('./routes/users');
-const cardsRoutes = require('./routes/cards'); */
-/* const { login, createUser } = require('./controllers/users'); */
-/* const auth = require('./middlewares/auth'); */
 const errorHandler = require('./middlewares/errorHandler');
-/* const { NotFoundError } = require('./utils/NotFoundError'); */
 
 const { PORT = 3000 } = process.env;
 
@@ -29,39 +23,8 @@ app.use(bodyParser.json());
 // все роуты приложения
 app.use(routes);
 
-/* // роут для регистрации пользователя
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), login);
-// роут для авторизации пользователя
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().uri()
-      .regex(/https?:\/\/(www.)?[
-        \w\-.~:/?#[\]@!$&'()*+,;=]{1,256}\.[a-z0-9]{2,6}\b([-\w()@:%.+~#=//?&]*)/),
-  }),
-}), createUser);
-
-// авторизация
-app.use(auth); */
-
-/* app.use(usersRoutes);
-app.use(cardsRoutes); */
-
 // обработчик ошибок celebrate
 app.use(errors());
-
-/* // oбработка неправильного пути
-app.use((req, res, next) => {
-  next(new NotFoundError('Страница не найдена'));
-}); */
 
 // обработка ошибок
 app.use(errorHandler);
