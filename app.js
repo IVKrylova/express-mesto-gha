@@ -7,6 +7,7 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const routes = require('./routes/index');
 const errorHandler = require('./middlewares/errorHandler');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -20,8 +21,14 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// подключаем логгер запросов
+app.use(requestLogger);
+
 // все роуты приложения
 app.use(routes);
+
+// подключаем логгер ошибок
+app.use(errorLogger);
 
 // обработчик ошибок celebrate
 app.use(errors());
