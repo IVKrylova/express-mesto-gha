@@ -1,8 +1,8 @@
 // домены, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'https://praktikum.tk',
-  'http://praktikum.tk',
-  'localhost:3000',
+  'https://mesto.ivkrylova.nomoredomains.work',
+  'http://mesto.ivkrylova.nomoredomains.work',
+  'http://localhost:3000',
 ];
 
 // eslint-disable-next-line consistent-return
