@@ -11,6 +11,8 @@ const corsHandler = (req, res, next) => {
   const { origin } = req.headers;
   // проверяем, что источник запроса есть среди разрешённых
 
+  console.log(5);
+
   if (allowedCors.includes(origin)) {
     // устанавливаем заголовок, который разрешает браузеру запросы с этого источника
     res.header('Access-Control-Allow-Origin', origin);
@@ -29,8 +31,8 @@ const corsHandler = (req, res, next) => {
     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
     // разрешаем кросс-доменные запросы с заголовками исходного запроса
     res.header('Access-Control-Allow-Headers', requestHeaders);
-    // запрос на получение данных авторизации с другого домена
-    res.header('Access-Control-Allow-Credentials', true);
+    /* // запрос на получение данных авторизации с другого домена
+    res.header('Access-Control-Allow-Credentials', true); */
     // завершаем обработку запроса и возвращаем результат клиенту
     return res.end();
   }

@@ -5,6 +5,7 @@ const { login, createUser } = require('../controllers/users');
 const usersRoutes = require('./users');
 const cardsRoutes = require('./cards');
 const { NotFoundError } = require('../utils/NotFoundError');
+/* const corsHandler = require('../middlewares/corsHandler'); */
 
 // роут для регистрации пользователя
 router.post('/signin', celebrate({
