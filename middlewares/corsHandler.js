@@ -1,10 +1,10 @@
 // домены, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'http://api.mesto.ivkrylova.nomoredomains.xyz',
-  'https://api.mesto.ivkrylova.nomoredomains.xyz',
-  'http://mesto.ivkrylova.nomoredomains.work',
-  'https://mesto.ivkrylova.nomoredomains.work',
-  'http://localhost:3000',
+  'http://api.mesto.ivkrylova.nomoredomains.xyz/',
+  'https://api.mesto.ivkrylova.nomoredomains.xyz/',
+  'http://mesto.ivkrylova.nomoredomains.work/',
+  'https://mesto.ivkrylova.nomoredomains.work/',
+  'http://localhost:3000/',
 ];
 
 module.exports.corsHandler = (req, res, next) => {
