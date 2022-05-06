@@ -3,6 +3,8 @@ const allowedCors = [
   'https://mesto.ivkrylova.nomoredomains.work',
   'https://api.mesto.ivkrylova.nomoredomains.xyz',
   'http://localhost:3000',
+  'https://api.mesto.ivkrylova.nomoredomains.xyz/signup',
+  'https://api.mesto.ivkrylova.nomoredomains.xyz/users/me',
 ];
 
 // eslint-disable-next-line consistent-return
