@@ -3,12 +3,10 @@ const allowedCors = [
   'https://mesto.ivkrylova.nomoredomains.work',
   'https://api.mesto.ivkrylova.nomoredomains.xyz',
   'http://localhost:3000',
-  'https://api.mesto.ivkrylova.nomoredomains.xyz/signup',
-  'https://api.mesto.ivkrylova.nomoredomains.xyz/users/me',
 ];
 
 // eslint-disable-next-line consistent-return
-const corsHandler = (req, res, next) => {
+module.exports.corsHandler = (req, res, next) => {
   // сохраняем источник запроса в переменную origin
   const { origin } = req.headers;
   // проверяем, что источник запроса есть среди разрешённых
@@ -41,5 +39,3 @@ const corsHandler = (req, res, next) => {
 
   next();
 };
-
-module.exports = corsHandler;
