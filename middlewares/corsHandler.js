@@ -11,7 +11,7 @@ const corsHandler = (req, res, next) => {
   const { origin } = req.headers;
   // проверяем, что источник запроса есть среди разрешённых
 
-  console.log(5);
+  console.log(origin);
 
   if (allowedCors.includes(origin)) {
     // устанавливаем заголовок, который разрешает браузеру запросы с этого источника
