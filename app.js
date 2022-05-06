@@ -26,7 +26,7 @@ app.use(bodyParser.json());
 app.use(requestLogger);
 
 // CORS
-app.use(corsHandler);
+app.options(corsHandler);
 
 // все роуты приложения
 app.use(routes);
