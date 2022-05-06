@@ -1,12 +1,13 @@
 // домены, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'http://api.mesto.ivkrylova.nomoredomains.xyz/',
-  'https://api.mesto.ivkrylova.nomoredomains.xyz/',
-  'http://mesto.ivkrylova.nomoredomains.work/',
-  'https://mesto.ivkrylova.nomoredomains.work/',
-  'http://localhost:3000/',
+  'http://api.mesto.ivkrylova.nomoredomains.xyz',
+  'https://api.mesto.ivkrylova.nomoredomains.xyz',
+  'http://mesto.ivkrylova.nomoredomains.work',
+  'https://mesto.ivkrylova.nomoredomains.work',
+  'http://localhost:3000',
 ];
 
+// eslint-disable-next-line consistent-return
 module.exports.corsHandler = (req, res, next) => {
   // сохраняем источник запроса в переменную origin
   const { origin } = req.headers;
@@ -36,5 +37,5 @@ module.exports.corsHandler = (req, res, next) => {
     return res.end();
   }
 
-  return next();
+  next();
 };
