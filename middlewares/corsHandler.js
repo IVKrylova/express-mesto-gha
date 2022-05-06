@@ -5,12 +5,12 @@ const allowedCors = [
   'http://localhost:3000',
 ];
 
-// eslint-disable-next-line consistent-return
 module.exports.corsHandler = (req, res, next) => {
   // сохраняем источник запроса в переменную origin
   const { origin } = req.headers;
   // проверяем, что источник запроса есть среди разрешённых
 
+  console.log(req.headers);
   console.log(origin);
 
   if (allowedCors.includes(origin)) {
