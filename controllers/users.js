@@ -119,7 +119,7 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
-        domain: 'https://mesto.ivkrylova.nomoredomains.work',
+        domain: 'mesto.ivkrylova.nomoredomains.work',
       })
         .send({ message: 'Логин успешный', userId: user._id });
     })
