@@ -120,7 +120,7 @@ module.exports.login = (req, res, next) => {
         sameSite: 'none',
         secure: true,
       })
-        .send({ message: 'Логин успешный', user });
+        .send({ message: 'Логин успешный' });
     })
     .catch(next);
 };
