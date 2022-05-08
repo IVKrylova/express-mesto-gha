@@ -113,15 +113,7 @@ module.exports.login = (req, res, next) => {
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
-
-      res.cookie('jwt', token, {
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true,
-        domain: 'mesto.ivkrylova.nomoredomains',
-      })
-        .send({ message: 'Логин успешный', userId: user._id });
+      res.send({ token });
     })
     .catch(next);
 };
