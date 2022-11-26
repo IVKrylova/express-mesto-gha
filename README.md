@@ -10,7 +10,6 @@
 
 ## Интересные ссылки
 Фронтенд проекта Mesto можно посмотреть [здесь](https://github.com/IVKrylova/react-mesto-auth).<br>
-Репозиторий с собранным фронтендом и бэкендом и ссылкой на сайт можно посмотреть [здесь](https://github.com/IVKrylova/react-mesto-api-full).
 
 ## Используемые технологии
 1. Express.js
