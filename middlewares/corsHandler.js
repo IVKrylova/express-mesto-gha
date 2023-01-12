@@ -1,7 +1,7 @@
 // домены, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'http://mesto.ivkrylova.nomoredomains.work',
-  'https://mesto.ivkrylova.nomoredomains.work',
+  'http://ivkrylova-mesto.fun',
+  'https://ivkrylova-mesto.fun',
   'http://localhost:3000',
   'https://localhost:3000',
 ];
