@@ -12,7 +12,7 @@
 `npm run dev` — запускает сервер с hot-reload
 
 ## Интересные ссылки
-Проект Mesto доступен по ссылке https://www.ivkrylova-mesto.fun
+Проект Mesto доступен по ссылке https://www.ivkrylova-mesto.fun <br>
 Фронтенд проекта Mesto можно посмотреть [здесь](https://github.com/IVKrylova/react-mesto-auth).<br>
 
 ## Используемые технологии
